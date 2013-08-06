@@ -15,11 +15,25 @@ describe Account do
     it "account has a valid number of digits" do
       expect {Account.new("2")}.to raise_error(InvalidAccountNumberError)
     end
+
+    it "new account expects an account number" do
+      expect {Account.new}.to raise_error(ArgumentError)
+    end
+
+    it "only accepts digits for account number" do
+      expect {Account.new("1231aa2945")}.to raise_error(InvalidAccountNumberError)
+    end
+
+
   end
 
   describe "#transactions" do
-    it "sets initial starting point in transactions to 0" do
+    it "sets initial starting point in transactions to 0 if no starting balance is passed" do
       account.transactions.should eq [0]
+    end
+
+    it 'sets starting array to starting balance passed upon initialize' do
+      account3.transactions.should eq [40]
     end
   end
 
@@ -37,7 +51,7 @@ describe Account do
   end
 
   describe "#deposit!" do
-    it "return error when deposit number is negative" do
+    it "returns error when deposit number is negative" do
       expect {account.deposit!(-2)}.to raise_error(NegativeDepositError)
     end
 
@@ -47,10 +61,8 @@ describe Account do
   end
 
   describe "#withdraw!" do
-    it "balance should decrease on withdaw" do
-      previous_balance = account3.balance
-      account3.withdraw!(5)
-      account3.balance.should be < previous_balance
+    it "should subtract withdraw amount from original balance" do
+      account3.withdraw!(5).should eq 35
     end
 
     it "should raise OverdraftError when withdrawing amount greater than balance" do
