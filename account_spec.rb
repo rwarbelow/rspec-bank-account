@@ -5,7 +5,7 @@ require_relative "account"
 describe Account do
   let (:account_number) {"0123456789"}
   let (:account) {Account.new(account_number)}
-  let (:account3) {Account.new(account_number, 40)}
+  let (:account2) {Account.new(account_number, 40)}
 
   describe "#initialize" do
     it "returns a instance of account" do
@@ -33,7 +33,7 @@ describe Account do
     end
 
     it 'sets starting array to starting balance passed upon initialize' do
-      account3.transactions.should eq [40]
+      account2.transactions.should eq [40]
     end
   end
 
@@ -56,13 +56,13 @@ describe Account do
     end
 
     it "should add deposit amount to original balance" do
-      account3.deposit!(5).should eq 45
+      account2.deposit!(5).should eq 45
     end
   end
 
   describe "#withdraw!" do
     it "should subtract withdraw amount from original balance" do
-      account3.withdraw!(5).should eq 35
+      account2.withdraw!(5).should eq 35
     end
 
     it "should raise OverdraftError when withdrawing amount greater than balance" do
