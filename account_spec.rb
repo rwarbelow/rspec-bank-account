@@ -3,27 +3,58 @@ require "rspec"
 require_relative "account"
 
 describe Account do
-  describe "#initialize" do
+  let (:account_number) {"0123456789"}
+  let (:account) {Account.new(account_number)}
+  let (:account3) {Account.new(account_number, 40)}
 
+  describe "#initialize" do
+    it "returns a instance of account" do
+      expect(Account.new(account_number)).to be_a_kind_of(Account)
+    end
+
+    it "account has a valid number of digits" do
+      expect {Account.new("2")}.to raise_error(InvalidAccountNumberError)
+    end
   end
 
   describe "#transactions" do
-
+    it "sets initial starting point in transactions to 0" do
+      account.transactions.should eq [0]
+    end
   end
 
   describe "#balance" do
-
+    it "add all values in transactions array" do
+      account1 = Account.new("1234567890", 50)
+      account1.balance.should eq 50
+    end
   end
 
-  describe "#account_number" do
-
+  describe "#acct_number" do
+    it "hides all but the last 4 numbers in account number" do
+      account.acct_number.should eq("******6789")
+    end
   end
 
-  describe "deposit!" do
+  describe "#deposit!" do
+    it "return error when deposit number is negative" do
+      expect {account.deposit!(-2)}.to raise_error(NegativeDepositError)
+    end
 
+    it "should add deposit amount to original balance" do
+      account3.deposit!(5).should eq 45
+    end
   end
 
   describe "#withdraw!" do
+    it "balance should decrease on withdaw" do
+      previous_balance = account3.balance
+      account3.withdraw!(5)
+      account3.balance.should be < previous_balance
+    end
 
+    it "should raise OverdraftError when withdrawing amount greater than balance" do
+      expect {account.withdraw!(100)}.to raise_error(OverdraftError)
+    end      
   end
 end
